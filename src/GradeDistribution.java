@@ -6,12 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.commons.math3.*;
+import org.apache.commons.math3.stat.regression.SimpleRegression;;
 
 /**
  * 
@@ -30,7 +34,8 @@ public class GradeDistribution {
 	
 	// Constants for relevant data references for easy access
 	public static final String MASTER_SHEET = "data/OSU_Grade_Distributions_SU18_AU19.xlsx";
-	public static final String EASY_GE_EXPORT = "data/easy-ge-list.txt";
+	public static final String EASY_GE_EXPORT = "data/easy-ge-export.txt";
+	public static final String CLASS_TRENDS_EXPORT = "data/class-trends-export.txt";
 	
 	/**
      * Explanation of what each column in the excel sheet represents:
@@ -69,7 +74,8 @@ public class GradeDistribution {
         System.out.println("1 - Search by entire department\n"
         		+ "2 - Search by specific course\n"
         		+ "3 - Print lowest pass rate classes\n"
-        		+ "4 - Export list of easiest GEs");
+        		+ "4 - Export list of easiest GEs\n"
+        		+ "5 - Export trends of pass rates");
         System.out.print("Select your option (blank to quit): ");
         String option = keyboard.nextLine();
         
@@ -90,19 +96,20 @@ public class GradeDistribution {
 		        	// TODO - i'm doing this tmrw 
 		        	exportGEList(mainSheet);
 		        	break;
-		        case "":
-		        	//TODO: actually break out of this loop
+		        case "5":
+		        	// TODO - calculate downward trends
+		        	exportDownwardTrends(mainSheet);
 		        	break;
-		        // next, i want to calculate downward trends of pass rate for courses
 		        default:
-		        	// Prints error message when user doesn't enter 1-4.
+		        	// Prints error message when user doesn't enter 1-5.
 		        	System.err.println("ERROR: Invalid input entered.");
 	        }
 	        System.out.println();
 	        System.out.println("1 - Search by entire department\n"
 	        		+ "2 - Search by specific course\n"
 	        		+ "3 - Print lowest pass rate classes\n"
-	        		+ "4 - Export list of easiest GEs");
+	        		+ "4 - Export list of easiest GEs\n"
+	        		+ "5 - Export trends of pass rates");
 	        System.out.print("Select your option (blank to quit): ");
 	        option = keyboard.nextLine();
         }
@@ -114,8 +121,8 @@ public class GradeDistribution {
         keyboard.close();
 		gradeBook.close();
     }
-    
-    /////////////////////////
+
+	/////////////////////////
     // USER OPTION METHODS //
     /////////////////////////
     
@@ -247,11 +254,98 @@ public class GradeDistribution {
     	
     }
     
-    // TODO - i'm doing this tmrw
+    /**
+     *  TODO - i'm doing this tmrw
+     * @param mainSheet
+     */
     private static void exportGEList(XSSFSheet mainSheet) {
     	XSSFRow currentRow; //Tracks the current row being read
     	// This is a tomorrow project for me, this will take a while to compile EvErY Ge OpTiOn
     }
+    
+    /**
+     * TODO - this
+     * @param mainSheet
+     * @throws IOException 
+     */
+    private static void exportDownwardTrends(XSSFSheet mainSheet) throws IOException {
+    	long startTime = System.currentTimeMillis();
+    	
+    	XSSFRow currentRow; // Tracks the current row being read
+    	HashMap<String, Double> data = new HashMap<String, Double>(); // Map that stores course information and pass rate
+    	HashMap<String, Double> trends = new HashMap<String, Double>();
+    	
+    	// Iterates through entire sheet
+    	for (int i = 1; i < mainSheet.getLastRowNum(); i++) {
+        	currentRow = mainSheet.getRow(i);
+        	// Checks to see if current row meets testing conditions
+        	if (meetsTestingConditions(currentRow)) { 
+        		// If so, data is inserted into map
+        		data.put(concatCourseInfo(currentRow), findPassRate(currentRow)); 
+        	}
+    	}
+    	
+    	BufferedWriter fileOut =  new BufferedWriter(new FileWriter(CLASS_TRENDS_EXPORT));
+    	
+    	/**
+    	 * TODO - comment this lol
+    	 * This runs in O(n^2) >.< 
+    	 */
+    	// Iterates through data to get a list of unique course names
+    	for (Map.Entry<String, Double> current : data.entrySet()) {
+    		String courseName = current.getKey().substring(0,8); // removes semester info
+    		if (!trends.containsKey(courseName)) {
+    			List<Double> passRates = new ArrayList<Double>();
+    			for (Map.Entry<String, Double> dataSearch : data.entrySet()) {
+    				if (dataSearch.getKey().contains(courseName)) {
+    					passRates.add(dataSearch.getValue());
+    				}
+    			}
+    			trends.put(courseName, approxTrend(passRates));
+    		}
+    	}
+    	
+    	// Map is then sorted ascending pass rates, then printed with easy readability
+        List<Entry<String, Double>> sortedData = entriesSortedByValues(data);
+        for (Map.Entry<String, Double> x : sortedData) {
+        	fileOut.write(x.getKey() + " - Pass Ratex Trend: " + x.getValue() + "\n");
+        }
+    
+    	fileOut.close();
+    	
+    	long endTime = System.currentTimeMillis();
+    	System.out.println("\nDone! Exported to: " + CLASS_TRENDS_EXPORT + " in " + (endTime - startTime) + " milliseconds.\n");
+	}
+    
+    //////////////////////////////////
+    // STATISTICAL ANALYSIS METHODS //
+    //////////////////////////////////
+    
+    public static double approxTrend(List<Double> passRates) { 
+    	int n = passRates.size();
+  
+    	double[] x = new double[n];
+    	for (int i = 0; i < n; i++) {
+    		x[i] = Double.valueOf(i+1);
+    	}
+    	
+    	double[] y = new double[n];
+    	for (int i = 0; i < n; i++) {
+    		y[i] = passRates.get(0);
+    	}
+    	
+    	double[][] data = new double[2][n];
+    	for (int i = 0; i < n; i++) {
+    		data[0][i] = i;
+    		data[1][i] = passRates.get(i);
+    	}
+    	
+    	SimpleRegression regression = new SimpleRegression();
+    	regression.addData(data);         
+    	return regression.getSlope();
+    	        
+    } 
+  
     
     ////////////////////////////////////////
     // VARIOUS HELPER/CALCULATION METHODS //
@@ -267,33 +361,34 @@ public class GradeDistribution {
      * 		either true or false based off
      */		
     private static boolean meetsTestingConditions(XSSFRow currentRow) {
-    	/**
-    	 * TODO
-    	 * THIS METHOD CURRENTLY DOESN"T WORK.
-    	 */
     	
     	// Checks to see if the course number is less than constant (only undergraduate courses)
     	boolean maxLevelCheck = true;
-    	final int maxLevelCourse = 5999;
-    	if (Double.parseDouble(currentRow.getCell(19).toString().substring(0,3)) < maxLevelCourse) {
+    	final Double maxLevelCourse = 2999.0;
+    	if (Double.parseDouble(currentRow.getCell(3).toString().substring(0,3)) > maxLevelCourse) {
     		maxLevelCheck = false;
     	}
     		
     	// Checks to see if minimum enrollment number is met (at least 30 students)
     	boolean minEnrollmentCheck = true;
-    	final int minNumEnrollment = 30;
+    	final Double minNumEnrollment = 30.0;
     	if (Double.parseDouble(currentRow.getCell(19).toString()) < minNumEnrollment) {
     		minEnrollmentCheck = false;
     	}
     	
+    	// Checks to see if it is a summer course
+    	boolean isSummer = false;
+    	if (currentRow.getCell(0).toString().substring(0,2).equals("SU")) {
+    		isSummer = true;
+    	}
+    	
     	// Checks to see if it isn't a technical course (ex. 4232T)
     	boolean techCourse = false;
-    	if (currentRow.getCell(19).toString().length() > 4 && currentRow.getCell(19).toString().charAt(4) == 'T') {
+    	if (currentRow.getCell(3).toString().indexOf('T') != -1) {
     		techCourse = true;
     	}
     	
-    	// return maxLevelCheck && minEnrollmentCheck && !techCourse;
-    	return true;
+    	return maxLevelCheck && minEnrollmentCheck && !isSummer && !techCourse;
     	
     }
     

@@ -1,5 +1,7 @@
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,24 +15,36 @@ public class ClassLists {
 	
 	/**
 	 * Helper function that stores a map of all departments and their unabbreviated names.
+	 * 
 	 * @return
 	 * 			Map with keys of abbreviated classes and values of their unabbreviated name.
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
 	public static final HashMap<String, String> unabbreviatedClasses() throws FileNotFoundException, IOException {
-		
-		//TODO: READ IN CSV FILE
-		//XSSFWorkbook listOfNames = new XSSFWorkbook(new FileInputStream(NAME_LIST)); // Copying the excel workbook into a local variable
-		HashMap<String, String> unabbreviatedClasses = new HashMap<String, String>(); //map that stores classes and their unabbreviated name
-		 
-		/* TODO: implement this loop once the CSV file is read in
-		for (int i = 1; i < listOfNames.size; i++) {
+		HashMap<String, String> unabbreviatedClasses = new HashMap<String, String>(); // map that stores classes and their unabbreviated name
+		BufferedReader br = new BufferedReader(new FileReader(NAME_LIST));
+	    String line = br.readLine();
+
+	    while((line=br.readLine()) != null) {
+	    	String str[] = line.split(",", 2);
+	    	System.out.println(str[0] + "\t\t" + str[1]);
+	    	unabbreviatedClasses.put(str[0], str[1]);
+	    }
+	    
+	    System.out.println(unabbreviatedClasses.size());
+	        
+		/* for (int i = 1; i < listOfNames.size; i++) {
 			currentRow = currentRow+1;
 			unabbreviatedClasses.put(currentRow.getCell(0), currentRow.getCell(1));
-		}
-		 */
-		 return unabbreviatedClasses; //returning the full map
+		} */
+	    
+	    br.close();
+	    return unabbreviatedClasses; //returning the full map
+	}
+	
+	public static void main(String args[]) throws FileNotFoundException, IOException {
+		unabbreviatedClasses();
 	}
 	
 	
