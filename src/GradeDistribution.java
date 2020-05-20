@@ -90,6 +90,9 @@ public class GradeDistribution {
 		        	// TODO - i'm doing this tmrw 
 		        	exportGEList(mainSheet);
 		        	break;
+		        case "":
+		        	//TODO: actually break out of this loop
+		        	break;
 		        // next, i want to calculate downward trends of pass rate for courses
 		        default:
 		        	// Prints error message when user doesn't enter 1-4.
@@ -265,6 +268,7 @@ public class GradeDistribution {
      */		
     private static boolean meetsTestingConditions(XSSFRow currentRow) {
     	/**
+    	 * TODO
     	 * THIS METHOD CURRENTLY DOESN"T WORK.
     	 */
     	

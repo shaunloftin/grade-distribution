@@ -1,0 +1,197 @@
+Subject Code,Full Department Name
+ACADAFF,Academic Affairs
+ACCAD,Advanced Computing Center for the Arts and Design
+ACCTMIS,Accounting & Management Information Systems
+ACEL,"Agricultural Communication, Education, and Leadership"
+AEDECON,"Agricultural, Environmental, and Development Economics"
+AEE,Agricultural and Extension Education
+AEROENG,Aerospace Engineering
+AFAMAST,African American and African Studies
+AGRCOMM,Agricultural Communication
+AGSYSMT,Agricultural Systems Management
+AIRSCI,Air Force Aerospace Studies
+ANATOMY,Anatomy
+ANIMSCI,Animal Sciences
+ANMLTEC,Animal Sciences Technology
+ANTHROP,Anthropology
+ARABIC,Arabic
+ARCH,Architecture
+ART,Art
+ARTEDUC,Art Education
+ARTSSCI,Arts and Sciences
+ASE,Agriscience Education
+ASL,American Sign Language
+ASTRON,Astronomy
+ATHTRNG,Athletic Training
+ATMOSSC,Atmospheric Sciences
+AVIATN,Aviation
+BIOCHEM,Biochemistry
+BIOETHC,Bioethics
+BIOLOGY,Biology
+BIOMEDE,Biomedical Engineering
+BIOMSCI,Biomedical Science
+BIOPHRM,Medical Biochemistry
+BIOTECH,Biotechnology
+BMI,Biomedical Informatics
+BSGP,Biomedical Sciences Graduate Program
+BUSADM,Business Administration
+BUSFIN,Business Administration: Finance
+BUSMGT,Business Administration: Management
+BUSMHR,Business Administration: Management HR
+BUSML,Business Administration: Marketing and Logistics
+BUSTEC,Business Technology
+CBE,Chemical and Biomolecular Engineering
+CBG,Cancer Biology and Genetics
+CHEM,Chemistry
+CHINESE,Chinese
+CIVILEN,Civil Engineering
+CLAS,Classics
+COMLDR,Community Leadership
+COMM,Communication
+COMPSTD,Comparative Studies
+CONSCI,Consumer Sciences
+CONSYSM,Construction Systems Management
+CRPLAN,City and Regional Planning
+CRPSOIL,Crop and Soil Technology
+CSCFFS,Consumer and Family Financial Services
+CSE,Computer Science and Engineering
+CSFRST,Consumer Sciences: Fashion and Retail Studies
+CSHSPMG,Consumer Sciences: Hospitality Management
+DANCE,Dance
+DENT,Dentistry
+DENTHYG,Dental Hygiene
+DESIGN,Design
+DSABLST,Disability Studies
+EALL,East Asian Languages and Literatures
+EARTHSC,Earth Sciences
+ECE,Electrical and Computer Engineering
+ECON,Economics
+EDUCST,Educational Studies
+EDUTL,Teaching and Learning
+EEOB,"Evolution, Ecology, and Organismal Biology"
+EHE,Education and Human Ecology
+ENGLISH,English
+ENGR,Engineering
+ENGRTECH,Engineering Technology
+ENR,Environment and Natural Resources
+ENTMLGY,Entomology
+ENVENG,Environmental Engineering
+ENVSCI,Environmental Science
+ESCE,Educational Sciences: Counselor Education
+ESEADM,Educational Sciences: Educational Administration
+ESEPSY,Educational Sciences: Educational Psychology
+ESHESA,Educational Sciences: Higher Education and Student Affairs
+ESLTECH,Educational Sciences: Learning Technology
+ESPHE,Educational Sciences: Philosophy and History of Education
+ESQREM,"Educational Sciences: Quantitative Research, Evaluation and Measurement"
+ESQUAL,Educational Sciences: Qualitative Research
+ESSPED,Educational Sciences: Special Education
+ESSPSY,Educational Sciences: School Psychology
+ESWDE,Educational Sciences: Workforce Development and Education
+EXP,Exploration
+FABENG,"Food, Agricultural and Biological Engineering"
+FAES,"Food, Agricultural, and Environmental Sciences"
+FDSCTE,Food Science and Technology
+FILMSTD,Film Studies
+FRENCH,French
+GENBIOL,General Studies: Biology
+GENCHEM,General Studies: Chemistry
+GENCOMM,General Studies: Communication
+GENMATH,General Studies: Mathematics
+GENSSC,General Studies: Social Sciences
+GENSTDS,General Studies
+GEOG,Geography
+GERMAN,German
+GRADSCH,Graduate Education
+HCINNOV,Healthcare Innovation
+HCS,Horticulture and Crop Science
+HDFS,Human Development and Family Science
+HEBREW,Hebrew
+HIMS,Health Information Management and Systems
+HISTART,History of Art
+HISTORY,History
+HONORS,Honors
+HORTTEC,Horticultural Technologies
+HTHRHSC,Health and Rehabilitation Sciences
+HUMNNTR,Human Nutrition
+HWIH,Health and Wellness Innovation in Healthcare
+INTSTDS,International Studies
+ISE,Integrated Systems Engineering
+ITALIAN,Italian
+JAPANSE,Japanese
+JEWSHST,Jewish Studies
+KINESIO,Kinesiology
+KNHES,Kinesiology: Exercise Science
+KNPE,Kinesiology: Physical Education
+KNSFHP,"Kinesiology: Sport, Fitness, and Health Program"
+KNSISM,Kinesiology: Sports Industry and Sports Management
+KOREAN,Korean
+LARCH,Landscape Architecture
+LATIN,Latin
+LING,Linguistics
+MATH,Mathematics
+MATSCEN,Materials Science and Engineering
+MBA,Master of Business Administration
+MCDBIO,"Molecular, Cellular, and Developmental Biology"
+MDRNGRK,Modern Greek
+MEATSCI,Meat Science
+MECHENG,Mechanical Engineering
+MEDCOLL,Medicine
+MEDDIET,Medical Dietetics
+MEDLBS,Medical Laboratory Science
+MEDREN,Medieval and Renaissance Studies
+MICRBIO,Microbiology
+MILSCI,Military Science
+MOLGEN,Molecular Genetics
+MUSIC,Music
+MVNGIMG,Moving Image Production
+NAVALSC,Naval Science
+NELC,Near Eastern Languages and Cultures
+NEUROGS,Neuroscience Graduate Studies
+NEUROSC,Neuroscience
+NRSADVN,Nursing Advancement
+NRSPRCT,Nursing Practice
+NUCLREN,Nuclear Engineering
+NURSING,Nursing
+OCCTHER,Occupational Therapy
+OPTOM,Optometry
+OSBP,Ohio State Biochemistry Program
+PHILOS,Philosophy
+PHR,Pharmaceutical Sciences
+PHYSICS,Physics
+PHYSIO,Physiology and Cell Biology
+PHYSTHR,Physical Therapy
+PLNTPTH,Plant Pathology
+POLITSC,Political Science
+PORTGSE,Portuguese
+PSYCH,Psychology
+PUBAFRS,Public Affairs
+PUBHBIO,Public Health: Biostatistics
+PUBHEHS,Public Health: Environmental Health Sciences
+PUBHEPI,Public Health: Epidemiology
+PUBHHBP,Public Health: Health Behavior and Health Promotion
+PUBHHMP,Public Health: Health Services Management and Policy
+PUBHLTH,Public Health
+RADSCI,Radiation Sciences
+RELSTDS,Religious Studies
+RURLSOC,Rural Sociology
+RUSSIAN,Russian
+SCANDVN,Scandinavian
+SCHOLAR,Scholars
+SLAVIC,Slavic and East European Languages and Literatures
+SOCIOL,Sociology
+SOCWORK,Social Work
+SOMALI,Somali
+SPANISH,Spanish
+SPHHRNG,Speech and Hearing Sciences
+STAT,Statistics
+SWAHILI,Swahili
+THEATRE,Theatre
+VETBIOS,Veterinary Biosciences
+VETCLIN,Veterinary Clinical Sciences
+VETPREV,Veterinary Preventive Medicine
+VISSCI,Vision Sciences
+VMCOLL,Veterinary Medicine
+WELDENG,Welding Engineering
+WGSST,Womens Gender and Sexuality Studies
+YIDDISH,Yiddish & Ashkenazic Studies
