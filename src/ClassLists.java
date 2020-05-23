@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class ClassLists {
 	
 	public static final String NAME_LIST = "data/Unabbreviated_Names.csv";
-	//public static final String DEPARTMENT_LIST = "data/Colleges_and_Departments.csv";
+	public static final String DEPARTMENT_LIST = "data/List_of_Departments.xlsx";
 	
 	/**
 	 * Helper function that stores a map of all departments and their unabbreviated names.
@@ -23,23 +24,15 @@ public class ClassLists {
 	 */
 	public static final HashMap<String, String> unabbreviatedClasses() throws FileNotFoundException, IOException {
 		HashMap<String, String> unabbreviatedClasses = new HashMap<String, String>(); // map that stores classes and their unabbreviated name
-		BufferedReader br = new BufferedReader(new FileReader(NAME_LIST));
-	    String line = br.readLine();
+		BufferedReader nameReader = new BufferedReader(new FileReader(NAME_LIST)); //reads CSV file of each name and their full department list
+	    String line = nameReader.readLine(); //current line in CSV file
 
-	    while((line=br.readLine()) != null) {
+	    while((line=nameReader.readLine()) != null) {
 	    	String str[] = line.split(",", 2);
-	    	System.out.println(str[0] + "\t\t" + str[1]);
 	    	unabbreviatedClasses.put(str[0], str[1]);
 	    }
 	    
-	    System.out.println(unabbreviatedClasses.size());
-	        
-		/* for (int i = 1; i < listOfNames.size; i++) {
-			currentRow = currentRow+1;
-			unabbreviatedClasses.put(currentRow.getCell(0), currentRow.getCell(1));
-		} */
-	    
-	    br.close();
+	    nameReader.close(); //closing reader stream
 	    return unabbreviatedClasses; //returning the full map
 	}
 	
@@ -53,10 +46,24 @@ public class ClassLists {
 	 * @return
 	 * 			Map with keys of abbreviated classes and values of what college they fall under.
 	 */
-	public static final HashMap<String, String> classByCollege() throws FileNotFoundException, IOException {
-		//TODO: implement once the department list is created
-		 HashMap<String, String> classByCollege = new HashMap<String, String>();
-		return classByCollege;
+	public static final ArrayList<Map.Entry<String, ArrayList<String>>> departmentByCollege() throws FileNotFoundException, IOException {
+		ArrayList<Map.Entry<String, ArrayList<String>>> departmentByCollege = new ArrayList<Map.Entry<String, ArrayList<String>>>(); //ArrayList that stores each School and each of their departments
+		//TOOD: read in excel file
+		String currentSchool; //current school being read
+		ArrayList<String> currentSchoolDepartments = new ArrayList<String>(); //all departments in current school
+		
+		//TODO implement this loop
+		/*
+		 * for (int i = 0; i < excel rows; i++) {
+		 * 		currentSchoolDepartments.clear();
+		 * 		currentSchool = first cell of current row;
+		 * 		while (!next cell is empty) {
+		 * 			currentSchoolDepartments.put(current cell);
+		 * 		}
+		 * }
+		 */
+		
+		return departmentByCollege;
 	}
 
 	

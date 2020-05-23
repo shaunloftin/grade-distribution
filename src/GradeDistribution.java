@@ -125,7 +125,7 @@ public class GradeDistribution {
 	/////////////////////////
     // USER OPTION METHODS //
     /////////////////////////
-    
+	
     /**
      * Prints out all data related to a specific course, sorted by lowest pass rate.
      * 
