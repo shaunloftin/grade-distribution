@@ -293,7 +293,7 @@ public class GradeDistribution {
     	 */
     	// Iterates through data to get a list of unique course names
     	for (Map.Entry<String, Double> current : data.entrySet()) {
-    		String courseName = current.getKey().substring(0,8); // removes semester info
+    		String courseName = current.getKey().substring(8); // removes semester info
     		if (!trends.containsKey(courseName)) {
     			List<Double> passRates = new ArrayList<Double>();
     			for (Map.Entry<String, Double> dataSearch : data.entrySet()) {
@@ -301,14 +301,15 @@ public class GradeDistribution {
     					passRates.add(dataSearch.getValue());
     				}
     			}
+    			System.out.println("this ran");
     			trends.put(courseName, approxTrend(passRates));
     		}
     	}
     	
     	// Map is then sorted ascending pass rates, then printed with easy readability
-        List<Entry<String, Double>> sortedData = entriesSortedByValues(data);
+        List<Entry<String, Double>> sortedData = entriesSortedByValues(trends);
         for (Map.Entry<String, Double> x : sortedData) {
-        	fileOut.write(x.getKey() + " - Pass Ratex Trend: " + x.getValue() + "\n");
+        	fileOut.write(x.getKey() + " - Pass Rate Trend: " + x.getValue() + "\n");
         }
     
     	fileOut.close();
@@ -324,25 +325,31 @@ public class GradeDistribution {
     public static double approxTrend(List<Double> passRates) { 
     	int n = passRates.size();
   
-    	double[] x = new double[n];
-    	for (int i = 0; i < n; i++) {
-    		x[i] = Double.valueOf(i+1);
+    	if (n > 1) {
+	    	double[] x = new double[n];
+	    	for (int i = 0; i < n; i++) {
+	    		x[i] = Double.valueOf(i+1);
+	    	}
+	    	
+	    	double[] y = new double[n];
+	    	for (int i = 0; i < n; i++) {
+	    		y[i] = passRates.get(0);
+	    	}
+	    	
+	    	double[][] data = new double[2][n];
+	    	for (int i = 0; i < n; i++) {
+	    		data[0][i] = i;
+	    		data[1][i] = passRates.get(i);
+	    	}
+	    	
+	    	System.out.println("this ran");
+	    	
+	    	SimpleRegression regression = new SimpleRegression();
+	    	regression.addData(data);
+	    	return regression.getSlope();
+    	} else {
+    		return 1.0;
     	}
-    	
-    	double[] y = new double[n];
-    	for (int i = 0; i < n; i++) {
-    		y[i] = passRates.get(0);
-    	}
-    	
-    	double[][] data = new double[2][n];
-    	for (int i = 0; i < n; i++) {
-    		data[0][i] = i;
-    		data[1][i] = passRates.get(i);
-    	}
-    	
-    	SimpleRegression regression = new SimpleRegression();
-    	regression.addData(data);         
-    	return regression.getSlope();
     	        
     } 
   
