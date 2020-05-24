@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -36,6 +39,11 @@ public class GradeDistribution {
 	public static final String MASTER_SHEET = "data/OSU_Grade_Distributions_SU18_AU19.xlsx";
 	public static final String EASY_GE_EXPORT = "data/easy-ge-export.txt";
 	public static final String CLASS_TRENDS_EXPORT = "data/class-trends-export.txt";
+	
+	public static Double MAX_COURSE_LEVEL = 2999.0;
+	public static Double MIN_ENROLLMENT = 30.0;
+	public static boolean IS_SUMMER = false;
+	public static boolean TECH_COURSE = false;
 	
 	/**
      * Explanation of what each column in the excel sheet represents:
@@ -75,7 +83,8 @@ public class GradeDistribution {
         		+ "2 - Search by specific course\n"
         		+ "3 - Print lowest pass rate classes\n"
         		+ "4 - Export list of easiest GEs\n"
-        		+ "5 - Export trends of pass rates");
+        		+ "8 - Clear console\n"
+        		+ "9 - Modify data filters");
         System.out.print("Select your option (blank to quit): ");
         String option = keyboard.nextLine();
         
@@ -94,11 +103,16 @@ public class GradeDistribution {
 		        	break;
 		        case "4":
 		        	// TODO - i'm doing this tmrw 
-		        	exportGEList(mainSheet);
+		        	// exportGEList(mainSheet);
+		        	System.out.println("Oops! I still need to do this!");
 		        	break;
-		        case "5":
+		        case "8":
+		        	for (int i = 0; i < 30; i++) {
+		        		System.out.println("\n");
+		        	}
+		        case "9":
 		        	// TODO - calculate downward trends
-		        	exportDownwardTrends(mainSheet);
+		        	modifyDataFilters(keyboard);
 		        	break;
 		        default:
 		        	// Prints error message when user doesn't enter 1-5.
@@ -109,7 +123,8 @@ public class GradeDistribution {
 	        		+ "2 - Search by specific course\n"
 	        		+ "3 - Print lowest pass rate classes\n"
 	        		+ "4 - Export list of easiest GEs\n"
-	        		+ "5 - Export trends of pass rates");
+	        		+ "8 - Clear console\n"
+	        		+ "9 - Modify data filters");
 	        System.out.print("Select your option (blank to quit): ");
 	        option = keyboard.nextLine();
         }
@@ -155,11 +170,7 @@ public class GradeDistribution {
             }
         }
         
-        // Map is then sorted ascending pass rates, then printed with easy readability
-        List<Entry<String, Double>> sortedData = entriesSortedByValues(data);
-        for (Map.Entry<String, Double> x : sortedData) {
-        	System.out.println(x.getKey() + " Pass Rate: " + x.getValue() + " %");
-        }
+        printSearch(data, keyboard, "passRates-" + dept, 0);
         
     }
     
@@ -195,11 +206,7 @@ public class GradeDistribution {
             }
         }
         
-        // Map is then sorted ascending pass rates, then printed with easy readability
-        List<Entry<String, Double>> sortedData = entriesSortedByValues(data);
-        for (Map.Entry<String, Double> x : sortedData) {
-        	System.out.println(x.getKey() + " Pass Rate: " + x.getValue() + " %");
-        }
+        printSearch(data, keyboard, "passRates-" + dept + courseNum, 0);
     	
     }
     
@@ -219,17 +226,20 @@ public class GradeDistribution {
     	int numOfCourses = mainSheet.getLastRowNum(); // Stores max amount of rows to be printed
     	
     	// Ask user how many most failed courses they would like to see
-    	System.out.println("There are " + numOfCourses + " rows of course data. How many rows would you like to see? ");
-    	String numEnteredStr = keyboard.nextLine();
+    	System.out.print("There are " + numOfCourses + " rows of course data. How many rows would you like to see? ");
     	
     	// Validates user input through try/catch
     	int numEntered;
     	try {
-    		numEntered = Integer.parseInt(numEnteredStr);
+    		numEntered = Integer.parseInt(keyboard.nextLine());
+    		while (numEntered < 1) {
+    			System.err.println("ERROR: Enter a number greater than 1.");
+    			System.out.print("There are " + numOfCourses + " rows of course data. How many rows would you like to see? ");
+    	    	numEntered = Integer.parseInt(keyboard.nextLine());
+    		}
     		if (numEntered > numOfCourses) {
     			numEntered = numOfCourses;
     		}
-    		System.out.println("Showing top " + numEntered + " courses with lowest pass rates.");
     	} catch (NumberFormatException e) {
     		// If user enters invalid number, prints default of top 50 most failed courses
     		numEntered = 50;
@@ -246,117 +256,122 @@ public class GradeDistribution {
         	}
     	}
     	
-    	// Map is then sorted ascending pass rates, then printed with easy readability
-    	List<Entry<String, Double>> sortedData = entriesSortedByValues(data);
-    	for (int i = 0; i < numEntered; i++) {
-    		System.out.println(sortedData.get(i).getKey() + " Pass Rate: " + sortedData.get(i).getValue() + " %");
-    	}
+    	printSearch(data, keyboard, "lowestPassRates-top" + numEntered, numEntered);
     	
     }
     
     /**
-     *  TODO - i'm doing this tmrw
+     *  TODO - i'm doing this..eventually
      * @param mainSheet
      */
     private static void exportGEList(XSSFSheet mainSheet) {
-    	XSSFRow currentRow; //Tracks the current row being read
-    	// This is a tomorrow project for me, this will take a while to compile EvErY Ge OpTiOn
+    	// XSSFRow currentRow; //Tracks the current row being read
     }
     
     /**
-     * TODO - this
-     * @param mainSheet
-     * @throws IOException 
+     * TODO - write javadoc
+     * TODO - fix bug with technical courses
+     * @param keyboard
      */
-    private static void exportDownwardTrends(XSSFSheet mainSheet) throws IOException {
-    	long startTime = System.currentTimeMillis();
+    private static void modifyDataFilters(Scanner keyboard) {
+    	System.out.println("The current data filters are as follows: ");
+    	System.out.println("The maximum level course is: " + MAX_COURSE_LEVEL);
+    	System.out.println("The minimum enrollment amount is: " + MIN_ENROLLMENT);
+    	System.out.println("Summer courses are considered: " + IS_SUMMER);
+    	System.out.println("Technical courses are considered: " + TECH_COURSE + "\n");
     	
-    	XSSFRow currentRow; // Tracks the current row being read
-    	HashMap<String, Double> data = new HashMap<String, Double>(); // Map that stores course information and pass rate
-    	HashMap<String, Double> trends = new HashMap<String, Double>();
-    	
-    	// Iterates through entire sheet
-    	for (int i = 1; i < mainSheet.getLastRowNum(); i++) {
-        	currentRow = mainSheet.getRow(i);
-        	// Checks to see if current row meets testing conditions
-        	if (meetsTestingConditions(currentRow)) { 
-        		// If so, data is inserted into map
-        		data.put(concatCourseInfo(currentRow), findPassRate(currentRow)); 
-        	}
-    	}
-    	
-    	BufferedWriter fileOut =  new BufferedWriter(new FileWriter(CLASS_TRENDS_EXPORT));
-    	
-    	/**
-    	 * TODO - comment this lol
-    	 * This runs in O(n^2) >.< 
-    	 */
-    	// Iterates through data to get a list of unique course names
-    	for (Map.Entry<String, Double> current : data.entrySet()) {
-    		String courseName = current.getKey().substring(8); // removes semester info
-    		if (!trends.containsKey(courseName)) {
-    			List<Double> passRates = new ArrayList<Double>();
-    			for (Map.Entry<String, Double> dataSearch : data.entrySet()) {
-    				if (dataSearch.getKey().contains(courseName)) {
-    					passRates.add(dataSearch.getValue());
-    				}
-    			}
-    			System.out.println("this ran");
-    			trends.put(courseName, approxTrend(passRates));
-    		}
-    	}
-    	
-    	// Map is then sorted ascending pass rates, then printed with easy readability
-        List<Entry<String, Double>> sortedData = entriesSortedByValues(trends);
-        for (Map.Entry<String, Double> x : sortedData) {
-        	fileOut.write(x.getKey() + " - Pass Rate Trend: " + x.getValue() + "\n");
-        }
-    
-    	fileOut.close();
-    	
-    	long endTime = System.currentTimeMillis();
-    	System.out.println("\nDone! Exported to: " + CLASS_TRENDS_EXPORT + " in " + (endTime - startTime) + " milliseconds.\n");
-	}
-    
-    //////////////////////////////////
-    // STATISTICAL ANALYSIS METHODS //
-    //////////////////////////////////
-    
-    public static double approxTrend(List<Double> passRates) { 
-    	int n = passRates.size();
-  
-    	if (n > 1) {
-	    	double[] x = new double[n];
-	    	for (int i = 0; i < n; i++) {
-	    		x[i] = Double.valueOf(i+1);
-	    	}
-	    	
-	    	double[] y = new double[n];
-	    	for (int i = 0; i < n; i++) {
-	    		y[i] = passRates.get(0);
-	    	}
-	    	
-	    	double[][] data = new double[2][n];
-	    	for (int i = 0; i < n; i++) {
-	    		data[0][i] = i;
-	    		data[1][i] = passRates.get(i);
-	    	}
-	    	
-	    	System.out.println("this ran");
-	    	
-	    	SimpleRegression regression = new SimpleRegression();
-	    	regression.addData(data);
-	    	return regression.getSlope();
+    	String input;
+    	// TODO - remove this
+    	System.err.println("WARNING: Technical course filter doesn't work rn");
+    	System.out.print("Please enter the new maxmium level course: ");
+    	MAX_COURSE_LEVEL = Double.parseDouble(keyboard.nextLine());
+    	System.out.print("Please enter the new minimum enrollment: ");
+    	MIN_ENROLLMENT = Double.parseDouble(keyboard.nextLine());
+    	System.out.print("Please enter whether to consider summer courses (T/F): ");
+    	input = keyboard.nextLine();
+    	if (input.equals("T") || input.equals("t")) {
+    		IS_SUMMER = true;
     	} else {
-    		return 1.0;
+    		IS_SUMMER = false;
     	}
-    	        
-    } 
+    	System.out.print("Please enter whether to consider technical courses (T/F): ");
+    	input = keyboard.nextLine();
+    	if (input.equals("T") || input.equals("t")) {
+    		TECH_COURSE = true;
+    	} else {
+    		TECH_COURSE = false;
+    	}
+    	
+    	System.out.println("Successfully modified data filters. \n");
+    	
+    }
+   
   
     
     ////////////////////////////////////////
     // VARIOUS HELPER/CALCULATION METHODS //
     ////////////////////////////////////////
+    
+    /**
+     * TODO - write this
+     * @param data
+     * @param keyboard
+     * @param contxt
+     * @param numToPrint
+     */
+    private static void printSearch(HashMap<String, Double> data, Scanner keyboard, String contxt, int numToPrint) {
+    	List<Entry<String, Double>> sortedData = entriesSortedByValues(data);
+    	System.out.println("Would you like to print to console or file?");
+    	System.out.print("Enter 1 for console, 2 for file: ");
+    	String input = keyboard.nextLine();
+    	
+    	while (!input.equals("1") && !input.equals("2")) {
+    		System.err.println("ERROR: Expected input of 1 or 2.");
+    		System.out.print("Enter 1 for console, 2 for file: ");
+        	input = keyboard.nextLine();
+    	}
+    	
+    	if (input.equals("1")) {
+    		if (numToPrint == 0) {
+				for (Map.Entry<String, Double> x : sortedData) {
+		        	System.out.println(x.getKey() + " Pass Rate: " + x.getValue() + " %");
+		        }
+			} else {
+				for (int i = 0; i < numToPrint; i++) {
+		    		System.out.println(sortedData.get(i).getKey() + " Pass Rate: " + sortedData.get(i).getValue() + " %");
+		    	}
+			}
+    	} else {
+    		String fileName = "data/exports/" + contxt + ".txt";
+        	try {
+    			BufferedWriter fileOut =  new BufferedWriter(new FileWriter(fileName));
+    			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
+    			Date date = new Date(System.currentTimeMillis());
+    			fileOut.write("##### OUTPUT FILE " + contxt + ".txt - REQUESTED ON: " + date.toString() + " #####\n\n");
+    			fileOut.write("##### DATA FILTERS #####\n");
+    			fileOut.write("MAXIUMUM COURSE LEVEL: " + MAX_COURSE_LEVEL + "\n");
+    			fileOut.write("MINIMUM ENROLLMENT AMOUNT: " + MIN_ENROLLMENT + "\n");
+    			fileOut.write("SUMMER COURSES CONSIDERED: " + IS_SUMMER + "\n");
+    			fileOut.write("TECHNICAL COURSES CONSIERED: " + TECH_COURSE + "\n");
+    			fileOut.write("##### END DATA FILTERS #####\n\n");
+    			if (numToPrint == 0) {
+    				for (Map.Entry<String, Double> x : sortedData) {
+    		        	fileOut.write(x.getKey() + " Pass Rate: " + x.getValue() + " %\n");
+    		        }
+    			} else {
+    				for (int i = 0; i < numToPrint; i++) {
+    					fileOut.write(sortedData.get(i).getKey() + " Pass Rate: " + sortedData.get(i).getValue() + " %\n");
+    		    	}
+    			}
+    			fileOut.close();
+    			System.out.println("Successfully printed to " + fileName + "\n");
+    		} catch (IOException e) {
+    			System.err.println("Error printing to file: " + fileName);
+    			System.err.println(e);
+    		}
+    	}
+    	
+    }
     
     /**
      * Filters for specific course information by returning true/false 
@@ -384,18 +399,26 @@ public class GradeDistribution {
     	}
     	
     	// Checks to see if it is a summer course
-    	boolean isSummer = false;
+    	boolean isSummerCheck = false;
     	if (currentRow.getCell(0).toString().substring(0,2).equals("SU")) {
-    		isSummer = true;
+    		isSummerCheck = true;
+    	}
+    	
+    	if (IS_SUMMER == true && isSummerCheck == true) {
+    		isSummerCheck = false;
     	}
     	
     	// Checks to see if it isn't a technical course (ex. 4232T)
-    	boolean techCourse = false;
+    	boolean techCourseCheck = false;
     	if (currentRow.getCell(3).toString().indexOf('T') != -1) {
-    		techCourse = true;
+    		techCourseCheck = true;
     	}
     	
-    	return maxLevelCheck && minEnrollmentCheck && !isSummer && !techCourse;
+    	if (TECH_COURSE == true && techCourseCheck == true) {
+    		isSummerCheck = false;
+    	}
+    	
+    	return maxLevelCheck && minEnrollmentCheck && !isSummerCheck && !techCourseCheck;
     	
     }
     
@@ -481,5 +504,91 @@ public class GradeDistribution {
 		);
 		return sortedEntries;
 	}
-
-}
+    
+    //////////////////////
+    // DEPRECIATED CODE //
+    //////////////////////
+    
+   /*
+   private static void exportDownwardTrends(XSSFSheet mainSheet) throws IOException {
+   	long startTime = System.currentTimeMillis();
+   	
+   	XSSFRow currentRow; // Tracks the current row being read
+   	HashMap<String, Double> data = new HashMap<String, Double>(); // Map that stores course information and pass rate
+   	HashMap<String, Double> trends = new HashMap<String, Double>();
+   	
+   	// Iterates through entire sheet
+   	for (int i = 1; i < mainSheet.getLastRowNum(); i++) {
+       	currentRow = mainSheet.getRow(i);
+       	// Checks to see if current row meets testing conditions
+       	if (meetsTestingConditions(currentRow)) { 
+       		// If so, data is inserted into map
+       		data.put(concatCourseInfo(currentRow), findPassRate(currentRow)); 
+       	}
+   	}
+   	
+   	BufferedWriter fileOut =  new BufferedWriter(new FileWriter(CLASS_TRENDS_EXPORT));
+   	
+   	
+   	// Iterates through data to get a list of unique course names
+   	for (Map.Entry<String, Double> current : data.entrySet()) {
+   		String courseName = current.getKey().substring(8); // removes semester info
+   		if (!trends.containsKey(courseName)) {
+   			List<Double> passRates = new ArrayList<Double>();
+   			for (Map.Entry<String, Double> dataSearch : data.entrySet()) {
+   				if (dataSearch.getKey().contains(courseName)) {
+   					passRates.add(dataSearch.getValue());
+   				}
+   			}
+   			System.out.println("this ran");
+   			trends.put(courseName, approxTrend(passRates));
+   		}
+   	}
+   	
+   	// Map is then sorted ascending pass rates, then printed with easy readability
+       List<Entry<String, Double>> sortedData = entriesSortedByValues(trends);
+       for (Map.Entry<String, Double> x : sortedData) {
+       	fileOut.write(x.getKey() + " - Pass Rate Trend: " + x.getValue() + "\n");
+       }
+   
+   	fileOut.close();
+   	
+   	long endTime = System.currentTimeMillis();
+   	System.out.println("\nDone! Exported to: " + CLASS_TRENDS_EXPORT + " in " + (endTime - startTime) + " milliseconds.\n");
+	}
+   
+   //////////////////////////////////
+   // STATISTICAL ANALYSIS METHODS //
+   //////////////////////////////////
+   
+   public static double approxTrend(List<Double> passRates) { 
+   	int n = passRates.size();
+ 
+   	if (n > 1) {
+	    	double[] x = new double[n];
+	    	for (int i = 0; i < n; i++) {
+	    		x[i] = Double.valueOf(i+1);
+	    	}
+	    	
+	    	double[] y = new double[n];
+	    	for (int i = 0; i < n; i++) {
+	    		y[i] = passRates.get(0);
+	    	}
+	    	
+	    	double[][] data = new double[2][n];
+	    	for (int i = 0; i < n; i++) {
+	    		data[0][i] = i;
+	    		data[1][i] = passRates.get(i);
+	    	}
+	    	
+	    	System.out.println("this ran");
+	    	
+	    	SimpleRegression regression = new SimpleRegression();
+	    	regression.addData(data);
+	    	return regression.getSlope();
+   	} else {
+   		return 1.0;
+   	}
+   	*/
+   	        
+   } 
