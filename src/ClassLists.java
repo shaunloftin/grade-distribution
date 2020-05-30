@@ -46,8 +46,8 @@ public class ClassLists {
 		String currentDepartment;
 		for (int i = 0 ; i < departmentByCollege.size(); i++) {
 			AbstractMap.SimpleEntry<String, ArrayList<String>> currentSchool = departmentByCollege.get(i);
-			System.out.println(currentSchool.getKey() + ": ");
 			ArrayList<String> departments = currentSchool.getValue();
+			System.out.println(currentSchool.getKey() + "(" + departments.size() +"): ");
 			for (int k = 0; k < departments.size(); k++) {
 				currentDepartment = unabbreviatedClasses.get(departments.get(k));
 				System.out.print(currentDepartment + ", ");
