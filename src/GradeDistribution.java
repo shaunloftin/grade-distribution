@@ -77,19 +77,21 @@ public class GradeDistribution {
 		XSSFWorkbook gradeBook = new XSSFWorkbook(new FileInputStream(MASTER_SHEET)); // Copying the excel workbook into a local variable
         XSSFSheet mainSheet = gradeBook.getSheet("Sheet1"); // Copying the first excel sheet into a local variable
         Scanner keyboard = new Scanner(System.in); // Initializes scanner for user input
-        
-        // Prompts user to select option, provides option list
-        System.out.println("1 - Search by entire department\n"
-        		+ "2 - Search by specific course\n"
-        		+ "3 - Print lowest pass rate classes\n"
-        		+ "4 - Export list of easiest GEs\n"
-        		+ "8 - Clear console\n"
-        		+ "9 - Modify data filters");
-        System.out.print("Select your option (blank to quit): ");
-        String option = keyboard.nextLine();
+        String option = "";
         
         // Continuously prompts user until null input is given
         while (option != null) {
+        	
+            // Prompts user to select option, provides option list
+            System.out.println("1 - Search by entire department\n"
+            		+ "2 - Search by specific course\n"
+            		+ "3 - Print lowest pass rate classes\n"
+            		+ "4 - Export list of easiest GEs\n"
+            		+ "8 - Clear console\n"
+            		+ "9 - Modify data filters");
+            System.out.print("Select your option (blank to quit): ");
+            option = keyboard.nextLine();
+            
         	// Calls specific user option method based off of input
 	        switch (option) {
 		        case "1":
@@ -110,27 +112,22 @@ public class GradeDistribution {
 		        	for (int i = 0; i < 30; i++) {
 		        		System.out.println("\n");
 		        	}
+		        	break;
 		        case "9":
 		        	// TODO - calculate downward trends
 		        	modifyDataFilters(keyboard);
 		        	break;
+		        case "":
+		        	option = null; //sets option to null to exit loop
+		        	break;
 		        default:
 		        	// Prints error message when user doesn't enter 1-5.
 		        	System.err.println("ERROR: Invalid input entered.");
-	        }
-	        System.out.println();
-	        System.out.println("1 - Search by entire department\n"
-	        		+ "2 - Search by specific course\n"
-	        		+ "3 - Print lowest pass rate classes\n"
-	        		+ "4 - Export list of easiest GEs\n"
-	        		+ "8 - Clear console\n"
-	        		+ "9 - Modify data filters");
-	        System.out.print("Select your option (blank to quit): ");
-	        option = keyboard.nextLine();
+	        	}
         }
 	    
         // Prints a gentle goodbye
-        System.out.println("\nDone!");
+        System.out.println("\nGoodbye!");
         
         // Closes input excel stream and Scanner stream
         keyboard.close();
