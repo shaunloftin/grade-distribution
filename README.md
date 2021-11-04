@@ -6,7 +6,7 @@ Inspired by a [r/OSU reddit post](https://reddit.com/r/OSU/comments/gljeqv/see_p
 This project hasn't been updated since Summer 2020.
 
 ## Main Goals
-* Expore different majors, find 4 year programs and analyze how rigorous different majors
+* Explore different majors, find 4 year programs and analyze how rigorous different majors
 * Identify the top "weed out classes"
       - Are these "weed out classes" getting easier/harder over given semesters?
 * What are the easiest GE classes?
